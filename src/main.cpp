@@ -4,20 +4,29 @@ using namespace std;
 
 int main()
 {
+    srand(time(NULL));
+    
     const int screenY = 800;
     const int screenX = 440;
 
     InitWindow(screenY, screenX, "Title");
 
-    Map gameMap(220, 400, 60);
-    gameMap.createMap();
+    Map gameMap(screenX / 1, screenY / 1, 60);
+    gameMap.recreateMap();
+
+    // BeginDrawing();
+        // ClearBackground(BLACK);
+        // gameMap.displayMap();
+    // EndDrawing();
 
     while (!WindowShouldClose())
     {
-        BeginDrawing();
+        if (IsKeyPressed(KEY_ENTER))
+            gameMap.recreateMap();
 
-        ClearBackground(BLACK);
-        gameMap.displayMap();
+        BeginDrawing();
+            ClearBackground(BLACK);
+            gameMap.displayMap(1);
         EndDrawing();
     }
 

@@ -17,8 +17,8 @@ private:
     siv::PerlinNoise perlin;
 
 public:
-    void createMap();
-    void displayMap();
+    void recreateMap();
+    void displayMap(int);
     Map(int y, int x, int octaves);
     ~Map();
 };
