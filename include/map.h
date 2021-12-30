@@ -19,6 +19,6 @@ private:
 public:
     void recreateMap();
     void displayMap(int);
-    Map(int y, int x, int octaves);
+    Map(int x, int y, int oct);
     ~Map();
 };

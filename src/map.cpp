@@ -10,13 +10,12 @@ void Map::recreateMap()
     for (int y = 0; y < sizeY; y++)
     {
         thread_pool.push_back(std::move(std::thread([&](int y, int oct)
-                                                    {
-                                                        for (int x = 0; x < sizeX; x++)
-                                                        {
-                                                            mapData[y][x] = perlin.octave2D_01((x * 0.01), (y * 0.01), oct);
-                                                        }
-                                                    },
-                                                    y, oct)));
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                mapData[y][x] = perlin.octave2D_01((x * 0.01), (y * 0.01), oct);
+            }
+        }, y, oct)));
     }
 
     for (std::thread &th : thread_pool)
@@ -49,7 +48,7 @@ void Map::displayMap(int scale)
     }
 }
 
-Map::Map(int y, int x, int octaves)
+Map::Map(int x, int y, int octaves)
 {
     // Set size of map
     this->sizeY = y;
@@ -58,25 +57,13 @@ Map::Map(int y, int x, int octaves)
     // Set octaves
     this->oct = octaves;
 
-    // Pick random seed
-    seed = rand();
-
-    // Reseed perlin noise
-    perlin.reseed(seed);
-
     mapData = new double *[sizeY];
     for (int i = 0; i < sizeY; i++)
     {
         mapData[i] = new double[sizeX];
     }
 
-    for (int y = 0; y < sizeY; y++)
-    {
-        for (int x = 0; x < sizeX; x++)
-        {
-            mapData[y][x] = perlin.octave2D_01((x * 0.01), (y * 0.01), oct);
-        }
-    }
+    recreateMap();
 }
 
 Map::~Map()
