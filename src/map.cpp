@@ -5,13 +5,24 @@ void Map::recreateMap()
     seed = rand();
     perlin.reseed(seed);
 
+    std::vector<std::thread> thread_pool;
+
     for (int y = 0; y < sizeY; y++)
     {
-        for (int x = 0; x < sizeX; x++)
-        {
-            mapData[y][x] = perlin.octave2D_01((x * 0.01), (y * 0.01), oct + 30);
-        }
+        thread_pool.push_back(std::move(std::thread([&](int y, int oct) {
+            for (int x = 0; x < sizeX; x++)
+            {
+                mapData[y][x] = perlin.octave2D_01((x * 0.01), (y * 0.01), oct);
+            }
+        }, y, oct)));
     }
+
+    for(std::thread &th : thread_pool)
+    {
+        if (th.joinable())
+            th.join();
+    }
+    thread_pool.clear();
 }
 
 void Map::displayMap(int scale)

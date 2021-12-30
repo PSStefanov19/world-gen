@@ -3,8 +3,8 @@
 #include <PerlinNoise.hpp>
 #include <iostream>
 #include <raylib.h>
-
-#define SIZE(x) (sizeof(x) / sizeof(x[0]))
+#include <thread>
+#include <vector>
 
 class Map
 {

@@ -1,23 +1,17 @@
 #include "map.h"
 #include <raylib.h>
-using namespace std;
 
 int main()
 {
     srand(time(NULL));
     
-    const int screenY = 800;
-    const int screenX = 440;
+    const int screenY = 1280;
+    const int screenX = 720;
 
     InitWindow(screenY, screenX, "Title");
 
-    Map gameMap(screenX / 1, screenY / 1, 60);
+    Map gameMap(screenX / 4, screenY / 4, 60);
     gameMap.recreateMap();
-
-    // BeginDrawing();
-        // ClearBackground(BLACK);
-        // gameMap.displayMap();
-    // EndDrawing();
 
     while (!WindowShouldClose())
     {
@@ -26,7 +20,7 @@ int main()
 
         BeginDrawing();
             ClearBackground(BLACK);
-            gameMap.displayMap(1);
+            gameMap.displayMap(4);
         EndDrawing();
     }
 
