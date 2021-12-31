@@ -13,12 +13,13 @@ private:
     int sizeX;
     int oct;
     double **mapData;
+    RenderTexture2D mapTexture;
     siv::PerlinNoise::seed_type seed;
     siv::PerlinNoise perlin;
 
 public:
     void recreateMap();
-    void displayMap(int);
+    void displayMap(int, bool);
     Map(int x, int y, int oct);
     ~Map();
 };

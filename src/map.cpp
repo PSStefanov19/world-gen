@@ -7,6 +7,7 @@ void Map::recreateMap()
 
     std::vector<std::thread> thread_pool;
 
+
     for (int y = 0; y < sizeY; y++)
     {
         thread_pool.push_back(std::move(std::thread([&](int y, int oct)
@@ -24,27 +25,53 @@ void Map::recreateMap()
             th.join();
     }
     thread_pool.clear();
+
+    BeginTextureMode(mapTexture);
+    for (int y = 0; y < sizeY; y++)
+    {
+        for (int x = 0; x < sizeX; x++)
+        {
+            DrawPixel(x, y, {
+                (unsigned char)(mapData[y][x] * 255),
+                (unsigned char)(mapData[y][x] * 255),
+                (unsigned char)(mapData[y][x] * 255),
+                255
+            });
+        }
+    }
+    EndTextureMode();
 }
 
-void Map::displayMap(int scale)
+void Map::displayMap(int scale, bool software_renderer)
 {
-    for (int i = 0; i < sizeY; i++)
+    if (software_renderer)
     {
-        for (int j = 0; j < sizeX; j++)
+        for (int i = 0; i < sizeY; i++)
         {
-            if (mapData[i][j] <= 0.40)
+            for (int j = 0; j < sizeX; j++)
             {
-                DrawRectangle(j * scale, i * scale, scale, scale, BLUE);
-            }
-            else if (mapData[i][j] > 0.40 && mapData[i][j] < 0.70)
-            {
-                DrawRectangle(j * scale, i * scale, scale, scale, GREEN);
-            }
-            else
-            {
-                DrawRectangle(j * scale, i * scale, scale, scale, GRAY);
+                if (mapData[i][j] <= 0.40)
+                {
+                    DrawRectangle(j * scale, i * scale, scale, scale, BLUE);
+                }
+                else if (mapData[i][j] > 0.40 && mapData[i][j] < 0.70)
+                {
+                    DrawRectangle(j * scale, i * scale, scale, scale, GREEN);
+                }
+                else
+                {
+                    DrawRectangle(j * scale, i * scale, scale, scale, GRAY);
+                }
             }
         }
+    }
+    else
+    {
+        DrawTextureRec(
+            mapTexture.texture,
+            { 0, 0, (float)mapTexture.texture.width, (float)-mapTexture.texture.height },
+            {}, WHITE
+        );
     }
 }
 
@@ -63,6 +90,8 @@ Map::Map(int x, int y, int octaves)
         mapData[i] = new double[sizeX];
     }
 
+    mapTexture = LoadRenderTexture(sizeX, sizeY);
+
     recreateMap();
 }
 
@@ -73,4 +102,5 @@ Map::~Map()
         delete[] mapData[i];
     }
     delete[] mapData;
+    UnloadRenderTexture(mapTexture);
 }

@@ -14,7 +14,7 @@ else
 	OUT_EXT=out
 endif
 
-ERRFLAGS=-Wall -Wextra -Werror
+ERRFLAGS=-O3 -Wall -Wextra -Werror -g
 
 # Put header files here
 _DEPS=map.h
@@ -37,4 +37,4 @@ $(ODIR)/%.o: src/%.cpp $(DEPS)
 
 # Link .o files and make an executable in bin/ folder
 main: $(OBJ)
-	$(CXX) -o bin/$@.$(OUT_EXT) $^ $(CXXFLAGS) $(ERRFLAGS) $(LIBS) && ./bin/$@.$(OUT_EXT)
+	$(CXX) -o bin/$@.$(OUT_EXT) $^ $(CXXFLAGS) $(ERRFLAGS) $(LIBS)
