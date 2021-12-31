@@ -7,7 +7,6 @@ void Map::recreateMap()
 
     std::vector<std::thread> thread_pool;
 
-
     for (int y = 0; y < sizeY; y++)
     {
         thread_pool.push_back(std::move(std::thread([&](int y, int oct)
@@ -42,7 +41,7 @@ void Map::recreateMap()
     EndTextureMode();
 }
 
-void Map::displayMap(int scale, bool software_renderer)
+void Map::displayMap(bool software_renderer)
 {
     if (software_renderer)
     {
@@ -67,31 +66,44 @@ void Map::displayMap(int scale, bool software_renderer)
     }
     else
     {
-        DrawTextureRec(
-            mapTexture.texture,
-            { 0, 0, (float)mapTexture.texture.width, (float)-mapTexture.texture.height },
-            {}, WHITE
-        );
+        BeginShaderMode(renderShader);
+            DrawTextureRec(
+                mapTexture.texture,
+                { 0, 0, (float)mapTexture.texture.width * scale, (float)-mapTexture.texture.height * scale },
+                {}, WHITE
+            );
+        EndShaderMode();
     }
 }
 
-Map::Map(int x, int y, int octaves)
+Map::Map(int x, int y, int octaves, int scale)
 {
     // Set size of map
-    this->sizeY = y;
-    this->sizeX = x;
+    this->sizeY = y / scale;
+    this->sizeX = x / scale;
 
     // Set octaves
     this->oct = octaves;
 
+    // Set scaling
+    this->scale = scale;
+
+    // Initialize map matrix
     mapData = new double *[sizeY];
     for (int i = 0; i < sizeY; i++)
     {
         mapData[i] = new double[sizeX];
     }
 
+    // Load shaders used for hardware rendering
+    renderShader = LoadShader(NULL, "res/map_render.fs");
+    int scaleLoc = GetShaderLocation(renderShader, "scale");
+    SetShaderValue(renderShader, scaleLoc, &(this->scale), SHADER_UNIFORM_INT);
+    
+    // Initialize map matrix (for GPU)
     mapTexture = LoadRenderTexture(sizeX, sizeY);
 
+    // Populate map
     recreateMap();
 }
 
@@ -103,4 +115,5 @@ Map::~Map()
     }
     delete[] mapData;
     UnloadRenderTexture(mapTexture);
+    UnloadShader(renderShader);
 }
