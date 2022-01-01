@@ -11,6 +11,7 @@ class Map
 private:
     int sizeY;
     int sizeX;
+    Vector2 position = {0, 0};
     int oct;
     int scale;
     double **mapData;
@@ -22,6 +23,7 @@ private:
 public:
     void recreateMap();
     void displayMap(bool);
+    void zoom(bool&);
     Map(int x, int y, int oct, int scale);
     ~Map();
 };

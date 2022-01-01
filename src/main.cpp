@@ -5,8 +5,8 @@ int main()
 {
     srand(time(NULL));
 
-    const int screenX = 1280;
-    const int screenY = 720;
+    const int screenX = 600;
+    const int screenY = 400;
     int scaling = 1;
     InitWindow(screenX, screenY, "Title");
     SetTargetFPS(60);
@@ -14,13 +14,16 @@ int main()
     Map gameMap(screenX, screenY, 60, scaling);
 
     bool softwareRendererToggle = false;
+    bool isZoomed = false;
 
     while (!WindowShouldClose())
     {
         if (IsKeyPressed(KEY_ENTER))
             gameMap.recreateMap();
-        else if (IsKeyPressed(KEY_TAB))
+        if (IsKeyPressed(KEY_TAB))
             softwareRendererToggle = !softwareRendererToggle;
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            gameMap.zoom(isZoomed);
 
         BeginDrawing();
             ClearBackground(BLACK);

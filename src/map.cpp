@@ -67,13 +67,36 @@ void Map::displayMap(bool software_renderer)
     else
     {
         BeginShaderMode(renderShader);
-            DrawTextureRec(
+            DrawTexturePro(
                 mapTexture.texture,
-                { 0, 0, (float)mapTexture.texture.width * scale, (float)-mapTexture.texture.height * scale },
-                {}, WHITE
+                {
+                    position.x - (float)mapTexture.texture.width, 
+                    position.y - (float)mapTexture.texture.height, 
+                    ((float)mapTexture.texture.width / scale), 
+                    -((float)mapTexture.texture.height / scale)
+                },
+                {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()},
+                {},
+                0,
+                WHITE
             );
         EndShaderMode();
     }
+}
+
+void Map::zoom(bool &isZoomed)
+{
+    if(!isZoomed){
+        scale *= 2;
+        position = GetMousePosition();
+        position.x /= 2;
+        position.y /= 2;
+    }
+    else{
+        scale /= 2;
+        position = {0, 0};
+    }
+    isZoomed = !isZoomed;
 }
 
 Map::Map(int x, int y, int octaves, int scale)
