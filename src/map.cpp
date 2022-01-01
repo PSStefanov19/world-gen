@@ -72,7 +72,7 @@ void Map::displayMap(bool software_renderer)
                 {
                     position.x - (float)mapTexture.texture.width, 
                     position.y - (float)mapTexture.texture.height, 
-                    ((float)mapTexture.texture.width / scale), 
+                    -((float)mapTexture.texture.width / scale), 
                     -((float)mapTexture.texture.height / scale)
                 },
                 {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()},
