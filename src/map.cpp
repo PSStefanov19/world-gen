@@ -41,7 +41,7 @@ void Map::recreateMap()
     EndTextureMode();
 }
 
-void Map::displayMap(bool software_renderer)
+void Map::displayMap(bool software_renderer, float R, float G, float B)
 {
     if (software_renderer)
     {
@@ -66,14 +66,22 @@ void Map::displayMap(bool software_renderer)
     }
     else
     {
+        int RLoc = GetShaderLocation(renderShader, "rChannel");
+        int GLoc = GetShaderLocation(renderShader, "gChannel");
+        int BLoc = GetShaderLocation(renderShader, "bChannel");
+    
+        SetShaderValue(renderShader, RLoc, &R, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(renderShader, GLoc, &G, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(renderShader, BLoc, &B, SHADER_UNIFORM_FLOAT);
+
         BeginShaderMode(renderShader);
             DrawTexturePro(
                 mapTexture.texture,
                 {
                     position.x - (float)mapTexture.texture.width, 
                     position.y - (float)mapTexture.texture.height, 
-                    -((float)mapTexture.texture.width / scale), 
-                    -((float)mapTexture.texture.height / scale)
+                    ((float)mapTexture.texture.width / scale), 
+                    ((float)mapTexture.texture.height / scale)
                 },
                 {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()},
                 {},
@@ -121,7 +129,9 @@ Map::Map(int x, int y, int octaves, int scale)
     // Load shaders used for hardware rendering
     renderShader = LoadShader(NULL, "res/map_render.fs");
     int scaleLoc = GetShaderLocation(renderShader, "scale");
+    
     SetShaderValue(renderShader, scaleLoc, &(this->scale), SHADER_UNIFORM_INT);
+
     
     // Initialize map matrix (for GPU)
     mapTexture = LoadRenderTexture(sizeX, sizeY);

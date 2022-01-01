@@ -22,7 +22,7 @@ private:
 
 public:
     void recreateMap();
-    void displayMap(bool);
+    void displayMap(bool, float, float, float);
     void zoom(bool&);
     Map(int x, int y, int oct, int scale);
     ~Map();

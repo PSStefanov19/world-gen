@@ -5,7 +5,11 @@ in vec4 fragColor;
 
 uniform sampler2D texture0;
 uniform int scale;
+uniform float rChannel;
+uniform float gChannel;
+uniform float bChannel;
 
+// Final color
 out vec4 finalColor;
 
 void main()
@@ -15,16 +19,16 @@ void main()
     if (val <= 0.40)
     {
         // BLUE
-        finalColor = vec4( 0.1, val,  val+0.4, 1.0);
+        finalColor = vec4( rChannel * 0.1, gChannel * val, bChannel * (val+0.4), 1.0);
     }
     else if (val > 0.40 && val < 0.70)
     {
         // GREEN
-         finalColor = vec4(-val, val,  val-0.7, 1.0);
+         finalColor = vec4(rChannel * -val, gChannel * val, bChannel * (val-0.7), 1.0);
     }
     else
     {
         // GRAY
-        finalColor = vec4(val-0.1, val-0.2, 0.3, 1.0);
+        finalColor = vec4( rChannel * (val-0.1), gChannel * (val-0.2), bChannel * 0.3, 1.0);
     }
 }
