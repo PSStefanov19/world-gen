@@ -179,6 +179,9 @@
 *
 **********************************************************************************************/
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wall"
+
 #ifndef RAYGUI_H
 #define RAYGUI_H
 
@@ -4340,3 +4343,5 @@ static int GetCodepoint(const char *text, int *bytesProcessed)
 #endif      // RAYGUI_STANDALONE
 
 #endif      // RAYGUI_IMPLEMENTATION
+
+#pragma GCC diagnostic pop
